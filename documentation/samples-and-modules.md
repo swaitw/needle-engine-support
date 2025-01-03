@@ -1,47 +1,47 @@
-# Samples and Modules 🔭
+---
+title: Samples Projects
+---
 
-Projects can be composed of re-usable pieces that we call [**NpmDef**](./project_structure.md#npm-definition-files) (which stands for Npm Defintion File). 
+<sample src="https://engine.needle.tools/samples-uploads/physics-cannon/" />
 
-Below you can find links to other repositories that contain Unity packages. These packages can be installed like any Unity package and used in your own projects. They usually contain eihter examples or modules that we use ourselves, but that are not ready to be part of the core Needle Engine.  
-
-
-## [needle-engine-modules ⇡](https://github.com/needle-tools/needle-engine-modules) 
-   - **Custom Timeline Tracks**  
-     Video Track (sync video playback to a Timeline)
-     CssTrack (control css properties from the Timeline)
-     
-   - **Splines (for Unity 2022.1+)**  
-     Export splines to three.js
-     SplineWalker for controlling camera motion based on a spline
-     Timeline track to control SplineWalker
-
-   - **Google Drive Integration**  
-     Sketches around drag-drop integration of Google Drive, file picking, app integration
-     
-## [needle-engine-samples ⇡](https://github.com/needle-tools/needle-engine-samples)  
-Contains code and small project samples to show things such as:  
+## Samples to download and play
+View all samples at [engine.needle.tools/samples](https://engine.needle.tools/samples) with a live preview and links for download and installation.
   
-- [Brune Simons 20k](https://bruno-simon-20k-needle.glitch.me/)  
+<!-- - [Brune Simons 20k](https://engine.needle.tools/samples/buno-simon-20k)  
   *Physics*
-- [Stencil Portals](https://needle-stencil-rendering-sample.glitch.me/)  
+- [Stencil Portals](https://engine.needle.tools/samples/stencil-portals)  
   *URP RenderObject stencil to threejs*
-- [Custom Shaders](https://needle-custom-shader-sample.glitch.me/)  
+- [Custom Shaders](https://engine.needle.tools/samples/custom-shaders)  
   *Unity ShaderGraph to threejs*
 - [Sandbox](https://needle-tiny-starter.glitch.me/)  
   *Multi-user sandbox builder*
 - [VideoPlayer](https://needle-videoplayer-sample.glitch.me/)  
   *Minimal Unity VideoPlayer sample*  
-- [UI Button](https://needle-ui-button-sample.glitch.me/)   
+- [UI Button](https://engine.needle.tools/samples/ui-button)   
   *Minimal UI button event sample*
 - [Spatial Trigger](https://needle-spatial-trigger-sample.glitch.me/)  
   *Define areas in your world and hookup events from Unity*
-  
+- and [more](https://engine.needle.tools/samples/)
+
+---
+
+<sample src="https://engine.needle.tools/samples/particles/" />
+
+<video-embed src="https://user-images.githubusercontent.com/5083203/189970610-9f913d5e-4f77-4a64-bc15-beb8220e82cf.mp4" />
+ 
+<video-embed src="https://user-images.githubusercontent.com/5083203/189973474-2d907e1c-fae3-439f-a349-5fe2c9b25b15.mp4" />
+ 
+<video-embed src="https://user-images.githubusercontent.com/5083203/190458268-c66bad1e-fd68-4171-85b0-2ce001591650.mp4" />
+
+<sample src="https://engine.needle.tools/samples/stencil-portals/" />
+
+<sample src="https://engine.needle.tools/samples/iframe-content/" /> -->
 
 
-https://user-images.githubusercontent.com/5083203/189973321-aeafc83b-7c71-4517-a482-45cd9dbf9a4c.mp4  
+<!-- <actiongroup>
+<action href="https://github.com/needle-tools/needle-engine-samples">Get the samples on github</action>
+</actiongroup> -->
 
-https://user-images.githubusercontent.com/5083203/189970610-9f913d5e-4f77-4a64-bc15-beb8220e82cf.mp4  
 
-https://user-images.githubusercontent.com/5083203/189973474-2d907e1c-fae3-439f-a349-5fe2c9b25b15.mp4
 
-https://user-images.githubusercontent.com/5083203/190458268-c66bad1e-fd68-4171-85b0-2ce001591650.mp4
+

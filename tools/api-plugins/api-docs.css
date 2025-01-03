@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,300..900&display=swap');
+
+body, a, button, input, select, textarea {
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+.tsd-page-toolbar .tsd-toolbar-contents {
+    width: min(500px, 80%);
+    height: 52px;
+    border-radius: 4em;
+    position: relative;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.tsd-page-toolbar {
+    background: none;
+    border: none;
+    top: 8px;
+    height: 54px;
+    margin-bottom: 15px;
+}
+
+.tsd-page-toolbar .table-cell {
+    line-height: 52px;
+}
+
+.tsd-page-toolbar .tsd-toolbar-icon {
+    padding: 18px 0;
+}
+
+a.title {
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: transparent;
+    font-size: 24px;
+
+    background-image: url("https://engine.needle.tools/docs/needle-logo-white.svg");
+}
+
+/*
+a.title::after {
+    content: "API Reference";
+    color: initial;
+    opacity: 0.8;
+    font-weight: 300;
+    font-size: 20px;
+    margin-left: -37px;
+    bottom: 1px;
+    position: relative;
+}
+*/
+
+#tsd-search.has-focus {
+    background-color: transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+    html[data-theme="os"] .tsd-toolbar-contents {
+        border-bottom: 1px solid rgb(62, 76, 90);
+        background-color: #0d0d0da6;
+        outline: 1px solid rgba(0, 0, 0, .9);
+        box-shadow: 0 2px 15px #02022b33;
+    }
+
+    html[data-theme="os"] a.title {
+        background-image: url("https://engine.needle.tools/docs/needle-logo-white.svg")
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    html[data-theme="os"] .tsd-toolbar-contents {
+        border-bottom: 1px solid rgb(215, 217, 218);
+        background-color: #fffc;
+        outline: 1px solid rgba(255, 255, 255, .1);
+        box-shadow: 0 2px 15px #02022b33;
+    }
+
+    html[data-theme="os"] a.title {
+        background-image: url("https://engine.needle.tools/docs/needle-logo-black.svg")
+    }
+}
+
+html[data-theme="light"] .tsd-toolbar-contents {
+    border-bottom: 1px solid rgb(215, 217, 218);
+    background-color: #fffc;
+    outline: 1px solid rgba(255, 255, 255, .1);
+    box-shadow: 0 2px 15px #02022b33;
+}
+
+html[data-theme="light"] a.title {
+    background-image: url("https://engine.needle.tools/docs/needle-logo-black.svg")
+}
+
+
+html[data-theme="dark"] .tsd-toolbar-contents {
+    border-bottom: 1px solid rgb(62, 76, 90);
+    background-color: #0d0d0da6;
+    outline: 1px solid rgba(0, 0, 0, .9);
+    box-shadow: 0 2px 15px #02022b33;
+}
+
+html[data-theme="dark"] a.title {
+    background-image: url("https://engine.needle.tools/docs/needle-logo-white.svg")
+}
+
+@media screen and (max-width: 769px) {
+    .tsd-page-toolbar .tsd-toolbar-contents {
+    }
+    
+    #tsd-widgets {
+        line-height: initial;
+    }
+}
+
+/*
+#tsd-search .field label {    
+    z-index: 10;
+    overflow: visible;
+    padding-left: calc(min(500px, 80%) - 40px);
+    margin-right: 40px;
+}
+*/
+
+@media screen and (max-width: 440px) {
+    /*
+    a.title::after {
+        content: none;
+    }
+    */
+
+    /*
+    #tsd-search .field label {
+        padding-left: calc(80% - 80px);
+        margin-right: 20px;
+    }
+    */
+}

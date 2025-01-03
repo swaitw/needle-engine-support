@@ -1,32 +1,45 @@
-# Virtual and Augmented Reality
-
-[Supported Devices](#supported-devices) •
-[Adding VR and AR](#adding-vr-and-ar-capabilities-to-a-scene) •
-[Avatars](#avatars) •
-[HTML Content Overlays](#html-content-overlays-in-ar) •
-[Image and Marker Tracking](#image-tracking) •
-[Limitations for WebXR on iOS](#limitations-for-webxr-on-ios)  
+---
+title: VR & AR (WebXR)
+---
 
 ## Supported Devices
 Theoretically all WebXR-capable devices and browsers should be supported. That being said, we've tested the following configurations:  
 
 | Tested VR Device | Browser | Notes |
 | -- | -- | -- |
-| Meta Quest 1 | ✔️ Oculus Browser | support for sessiongranted |
-| Meta Quest 2 | ✔️ Oculus Browser | support for sessiongranted |
-| Pico Neo 3 | ✔️ Pico Browser | no hand tracking support, inverted controller thumbsticks |
+| Apple Vision Pro | ✔️ Safari Browser | hand tracking, support for transient pointer |
+| Meta Quest 1 | ✔️ Meta Browser | hand tracking, support for sessiongranted<sup>1</sup> |
+| Meta Quest 2 | ✔️ Meta Browser | hand tracking, support for sessiongranted<sup>1</sup>, passthrough (black and white) |
+| Meta Quest 3 | ✔️ Meta Browser | hand tracking, support for sessiongranted<sup>1</sup>, passthrough, depth sensing, mesh tracking |
+| Meta Quest Pro | ✔️ Meta Browser | hand tracking, support for sessiongranted<sup>1</sup>, passthrough |
+| Pico Neo 3 | ✔️ Pico Browser | no hand tracking, inverted controller thumbsticks |
+| Pico Neo 4 | ✔️ Pico Browser | passthrough, hand tracking<sup>2</sup> |
 | Oculus Rift 1/2 | ✔️ Chrome |  |
-| Hololens 2 | ✔️ Edge | in VR mode, background is rendered as well |
-| Quest 1/2 via Oculus Link | ✔️ Chrome | known issues with repeated refresh of a WebXR session |
+| Hololens 2 | ✔️ Edge | hand tracking, support for AR and VR (in VR mode, background is rendered as well) |
+| Looking Glass Portrait | ✔️ Chrome | requires shim, see samples | 
 
 | Tested AR Device | Browser | Notes |
 | -- | -- | -- |
 | Android 10+ | ✔️ Chrome | |
 | Android 10+ | ✔️ Firefox | |
-| iOS 15+ | ✔️ WebXR Viewer | some nonstandard behaviours but works |
-| iOS 15+ | ❌ Safari | can fall back to interactive USDZ files or [other approaches](#limitations-for-webxr-on-ios) |
+| iOS 15+ | ✔️ WebXR Viewer | does not fully implement standards, but supported |
+| iOS 15+ | (✔️)<sup>3</sup> Safari | No full code support, but Needle [Everywhere Actions](everywhere-actions.md) are supported for creating dynamic, interactive USDZ files. |
 | Hololens 2 | ✔️ Edge | |
 | Hololens 1 | ❌ | no WebXR support |
+| Magic Leap 2 | ✔️ | |
+
+| Not Tested but Should Work™️ | Browser | Notes |
+| -- | -- | -- |
+| Magic Leap 1 | | please let us know if you tried! |
+
+
+<sup>1</sup>: Requires enabling a browser flag: `chrome://flags/#webxr-navigation-permission`   
+<sup>2</sup>: Requires enabling a toggle in the Developer settings    
+<sup>3</sup>: Uses [Everywhere Actions](everywhere-actions.md) or [other approaches](#augmented-reality-and-webxr-on-ios)
+
+## Examples
+
+Visit our [Needle Engine XR Samples](https://engine.needle.tools/samples/?overlay=samples&tag=xr) to try many interactive examples right now!
 
 ## Adding VR and AR capabilities to a scene
 
@@ -43,10 +56,6 @@ AR, VR and networking capabilites in Needle Engine are designed to be modular. Y
   Add a `TeleportTarget` component to object hierarchies that can be teleported on.  
   To exclude specific objects, set their layer to `IgnoreRaycasting`.  
 
-- **Enable going into Miniature Mode**  
-  Pointing onto a surface and pressing <kb>A</kb> on a controller switches between 1:10 scale (miniature mode) and 1:1 scale.  
-  We're planning to add a component to have more control over this functionality.  
-
 ### Multiplayer
 
 - **Enable Networking**  
@@ -54,16 +63,13 @@ AR, VR and networking capabilites in Needle Engine are designed to be modular. Y
 
 - **Enable Desktop Viewer Sync**  
   Add a `SyncedCamera` component.
-
-- **Enable XR Avatar Sync**  
-  Add a `WebXRSync` component.
   
 - **Enable Voice Chat**  
   Add a `VoIP` component.
 
 > **Note**: these components can be anywhere inside your `GltfObject` hierarchy. They can also all be on the same GameObject.
 
- > **[Castle Builder ⇡](https://castle.needle.tools/)** uses all of the above for a cross-platform multiplayer sandbox experience.   
+ > **[Castle Builder](https://castle.needle.tools/)** uses all of the above for a cross-platform multiplayer sandbox experience.   
  > — #madebyneedle 💚  
    
 ### Special AR Components
@@ -83,12 +89,16 @@ AR, VR and networking capabilites in Needle Engine are designed to be modular. Y
 
 ### Travelling between VR worlds
 
-Needle Engine supports the [`sessiongranted` ⇡](https://github.com/immersive-web/navigation) state. This allows users to seamlessly traverse between WebXR applications without leaving an immersive session – they stay in VR or AR.  
+Needle Engine supports the [`sessiongranted`](https://github.com/immersive-web/navigation) state. This allows users to seamlessly traverse between WebXR applications without leaving an immersive session – they stay in VR or AR.  
 
-Currently, this is only supported on Oculus Quest 1 and 2 in the Oculus Browser. On other platforms, users will be kicked out of their current immersive session and have to enter VR again on the new page.  
+Currently, this is only supported on Oculus Quest 1, 2 and 3 in the Oculus Browser. On other platforms, users will be kicked out of their current immersive session and have to enter VR again on the new page.  
+Requires enabling a browser flag: `chrome://flags/#webxr-navigation-permission`  
 
 - **Click on objects to open links**  
-  The [samples repository ⇡](https://github.com/needle-tools/needle-engine-samples) contains a small script [`ClickToOpenWebsite` ⇡](https://github.com/needle-tools/needle-engine-samples/blob/main/package/Runtime/Needle%20Engine%20Samples~/ClickToOpenWebsite.ts) that makes it very easy to build connected worlds.  
+  Add the `OpenURL` component that makes it very easy to build connected worlds.  
+
+## Scripting  
+Read more about scripting for XR at the [scripting XR documentation](./scripting.md#xr-event-methods)
 
 ## Avatars
 
@@ -129,50 +139,92 @@ There's a number of experimental components to build more expressive Avatars. At
 ## HTML Content Overlays in AR  
     
 If you want to display different html content whether the client is using a regular browser or using AR or VR, you can just use a set of html classes.  
-This is controlled via HTML element classes. For example, to make content appear on desktop and in AR add a ``<div class="desktop ar"> ... </div>`` inside the `<needle-tiny>` tag:  
+This is controlled via HTML element classes. For example, to make content appear on desktop and in AR add a ``<div class="desktop ar"> ... </div>`` inside the `<needle-engine>` tag:  
 
 ```html
-<needle-tiny src="loadScene">
+<needle-engine>
     <div class="desktop ar" style="pointer-events:none;">
-        your content for AR and desktop goes here
+        <div class="positioning-container">
+          <p>your content for AR and desktop goes here</p>
+          <p class="only-in-ar">This will only be visible in AR</p>
+        <div>
     </div>
-</needle-tiny>
+</needle-engine>
 ```
+
+Content Overlays are implemented using the optional `dom-overlay` feature which is usually supported on screen-based AR devices (phones, tablets).  
+
+Use the `.ar-session-active` class to show/hide specific content while in AR. The [`:xr-overlay` pseudo class](https://www.w3.org/TR/webxr-dom-overlays-1/#css-pseudo-class) shouldn't be used at this point because using it breaks Mozilla's WebXR Viewer. 
+
+```css
+.only-in-ar {
+  display: none;
+}
+
+.ar-session-active .only-in-ar {
+  display:initial;
+}
+```
+
+It's worth noting that the overlay element [will be always displayed fullscreen while in XR](https://www.w3.org/TR/webxr-dom-overlays-1/#ua-style-sheet-defaults), independent of styling that has been applied. If you want to align items differently, you should make a container _inside_ the `class="ar"` element.  
+
+<sample src="https://engine.needle.tools/samples-uploads/ar-overlay/"/>
 
 ## Image Tracking
 
-WebXR doesn't yet support Image Tracking, it's still in a "draft" phase: [Marker Tracking Explainer](https://github.com/immersive-web/marker-tracking/blob/main/explainer.md)  
+Needle Engine supports **WebXR ImageTracking** ([Live Demo](https://engine.needle.tools/samples/image-tracking?utm_source=docs&utm_content=xr))   
+*Note*: While WebXR ImageTracking is still in "draft" phase ([Marker Tracking Explainer](https://github.com/immersive-web/marker-tracking/blob/main/explainer.md))   
+you need to follow these steps to enable WebXR ImageTracking on Android devices:
+
+- Enable `WebXR Incubations` in chrome
+- Add the `WebXRImageTracking` component
+
+You can find additional documentation in the [Everywhere Actions](everywhere-actions.md#image-tracking) section
 
 Without that spec, one can still request camera image access and run custom algorithms to determine device pose.  
-While we currently don't provide built-in components for this, here's a few references to libraries and frameworks that we want to try in the future:  
-   - [AR.js ⇡](https://github.com/AR-js-org/AR.js) (open source)
-   - [Mind AR ⇡](https://github.com/hiukim/mind-ar-js) (open source)
+Libraries to add image tracking:  
+   - [AR.js](https://github.com/AR-js-org/AR.js) (open source)
+   - [Mind AR](https://github.com/hiukim/mind-ar-js) (open source)
+   - [Experimental AR.js integration with Needle Engine](https://github.com/FireDragonGameStudio/NeedleAndARjs) by FireDragonGameStudio
 
-## Limitations for WebXR on iOS
 
-Due to Apple currently not supporting WebXR on iOS devices, Augmented Reality experiences on iOS are limited.  
 
-A number of options and workarounds exist to still give iOS users _some_ AR:  
+## Augmented Reality and WebXR on iOS
 
-1. **Guiding users towards WebXR-compatible browsers on iOS.**
-   Depending on your target audience, you can guide users on iOS towards for example Mozilla's [WebXR Viewer ⇡](https://apps.apple.com/de/app/webxr-viewer/id1295998056) to experience AR on iOS.  
-   
+Augmented Reality experiences on iOS are somewhat limited, due to Apple currently not supporting WebXR on iOS devices.  
+
+Needle Engine's [Everywhere Actions](everywhere-actions.md) are designed to fill that gap, bringing automatic interactive capabilities to iOS devices for scenes composed of specific components. They support a subset of the functionality that's available in WebXR, for example spatial audio, image tracking, animations, and more. See [the docs](everywhere-actions.md) for more information. 
+
+### Musical Instrument – WebXR and QuickLook support
+
+Here's an example for a musical instrument that uses Everywhere Actions and thus works in browsers and in AR on iOS devices. 
+It uses spatial audio, animation, and tap interactions.  
+<sample src="https://engine.needle.tools/samples-uploads/musical-instrument" />
+
+### Everywhere Actions and other options for iOS AR
+
+There's also other options for guiding iOS users to even more capable interactive AR experiences:
+
 3. **Exporting content on-the-fly as USDZ files.**  
-   These files can be displayed on iOS devices in AR. They lack interactivity (besides a small set of built-in components) but can be sufficient for product configurators and similar relatively static usecases.
-   An example is [Castle Builder ⇡](https://castle.needle.tools) where creations (not the live session) can be viewed in AR.
-   - The [three.js USDZ converter ⇡](https://threejs.org/examples/misc_exporter_usdz.html) can be used like any other three.js example to create and view USDZ files at runtime.  
+   These files can be displayed on iOS devices in AR. When exported from scenes with Everywhere Actions the interactivity is the same, more than sufficient for product configurators, narrative experiences and similar.
+   An example is [Castle Builder](https://castle.needle.tools) where creations (not the live session) can be viewed in AR.  
 
- > **[Encryption in Space ⇡](https://accurate-tree-observation.glitch.me/)** uses this approach. Players can collaboratively place text into the scene on their screens and then view the results in AR on iOS. On Android, they can also interact right in WebXR.   
+ > **[Encryption in Space](https://accurate-tree-observation.glitch.me/)** uses this approach. Players can collaboratively place text into the scene on their screens and then view the results in AR on iOS. On Android, they can also interact right in WebXR.   
  > — #madewithneedle by Katja Rempel 💚  
 
+1. **Guiding users towards WebXR-compatible browsers on iOS.**
+   Depending on your target audience, you can guide users on iOS towards for example Mozilla's [WebXR Viewer](https://apps.apple.com/de/app/webxr-viewer/id1295998056) to experience AR on iOS.  
+   
 2. **Using camera access and custom algorithms on iOS devices.**  
    One can request camera image access and run custom algorithms to determine device pose.  
    While we currently don't provide built-in components for this, here's a few references to libraries and frameworks that we want to try in the future:  
-   - [AR.js ⇡](https://github.com/AR-js-org/AR.js) (open source)
-   - [Mind AR ⇡](https://github.com/hiukim/mind-ar-js) (open source)
-   - [8th Wall ⇡](https://www.8thwall.com/) (commercial)
+   - [AR.js](https://github.com/AR-js-org/AR.js) (open source)
+     - [Experimental AR.js integration](https://github.com/FireDragonGameStudio/NeedleAndARjs) by FireDragonGameStudio
+   - [Mind AR](https://github.com/hiukim/mind-ar-js) (open source)
+   - [8th Wall](https://www.8thwall.com/) (commercial)
 
 ## References
 
-[WebXR Device API ⇡](https://www.w3.org/TR/webxr/)  
-[caniuse: WebXR ⇡](https://caniuse.com/webxr)  
+[WebXR Device API](https://www.w3.org/TR/webxr/)  
+[caniuse: WebXR](https://caniuse.com/webxr)  
+[Apple's Preliminary USD Behaviours](https://developer.apple.com/augmented-reality/quick-look/)

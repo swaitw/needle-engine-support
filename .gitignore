@@ -12,3 +12,19 @@ starter/Unity_2020_3/projects/*/assets
 starter/Unity_2020_3/projects/**/generated
 starter/*/projects/*/build.log
 starter/**/projects/**/include/fonts
+
+# vuepress
+dist
+**/node_modules
+.cache
+.temp
+src/docs/.vuepress/config.ts.*.mjs
+src/docs/.vuepress/dist
+documentation/.vuepress/*.ts.*.mjs
+documentation/.vuepress/public/meta
+.env
+documentation/community/contributions.json
+.DS_Store
+documentation/.vuepress/public/.preview
+documentation/api
+api

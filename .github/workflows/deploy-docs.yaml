@@ -1,0 +1,142 @@
+name: deploy docs
+
+on:
+  # trigger deployment on every push to main branch
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [updated_docs]
+  discussion:
+    types: [created, edited, deleted, labeled, unlabeled, category_changed]
+
+jobs: 
+
+  docs:
+    # https://github.com/orgs/community/discussions/25641
+    # https://github.com/orgs/community/discussions/25389
+    # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#discussion
+    # https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion
+    if: |
+      github.event_name == 'push' ||
+      github.event_name == 'repository_dispatch' ||
+      (github.event_name == 'discussion' && github.event.discussion.category.name == 'Share')
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # fetch all commits to get last updated time or other git log info
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          # choose node.js version to use
+          node-version: '20.15'
+
+      # install dependencies if the cache did not hit
+      - name: Install dependencies
+        # if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: npm install
+
+      # run build script
+      - name: Build VuePress site
+        run: npm run docs:build
+        env:
+          # @see https://docs.github.com/en/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # please check out the docs of the workflow for more details
+      # @see https://github.com/crazy-max/ghaction-github-pages
+      - name: Deploy github pages
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          # deploy to gh-pages branch
+          target_branch: gh_pages
+          # deploy the default output dir of VuePress
+          build_dir: dist
+        env:
+          # @see https://docs.github.com/en/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          
+
+  upload:
+    needs: docs
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # fetch all commits to get last updated time or other git log info
+          fetch-depth: 0
+
+      # checkout branch
+      - uses: actions/checkout@v3
+        with:
+          ref: gh_pages
+      
+      # deploy to ftp
+      - name: 📂 Deploy to ftp
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: f0152dc5
+          password: ${{ secrets.FTP_PASSWORD }}
+
+
+
+  notify_discord:
+    needs: upload
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' ||
+      github.event_name == 'repository_dispatch'
+    steps:
+      - uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DEPLOY_DISCORD_WEBHOOK }}
+          username: "Deploy Docs 🤖"
+          content: "Docs have been updated → <https://engine.needle.tools/docs/>\n`${{ github.event.head_commit.message }}${{github.event.client_payload.reason}}`"
+  
+
+
+  notify_discord_by_contribution:
+    needs: upload
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'discussion' && (github.event.action == 'created' || github.event.action == 'edited') && github.event.discussion.category.name == 'Share')
+    steps:
+      - uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DEPLOY_DISCORD_WEBHOOK }}
+          username: "Deploy Docs (Contribution) 🤖"
+          content: "Docs have been updated → <https://engine.needle.tools/docs/community/contributions> by discussion:\n<${{ github.event.discussion.html_url}}>"
+
+
+
+
+  check_links:
+    needs: upload
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # fetch all commits to get last updated time or other git log info
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          # choose node.js version to use
+          node-version: '20.15'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Test Links
+        run: npm run test:links
+        env:
+          DEPLOY_DISCORD_WEBHOOK: ${{ secrets.DEPLOY_DISCORD_WEBHOOK }}
